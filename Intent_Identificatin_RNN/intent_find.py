@@ -3,11 +3,11 @@ from sklearn import model_selection
 import numpy as np
 
 #from keras.preprocessing import sequence
-from keras.models import Model
 from keras.layers import Dense, Dropout, Input, merge
 from keras.layers.recurrent import LSTM
 from keras import optimizers
-
+from keras.layers import Embedding, Bidirectional,GRU
+from  keras.models  import Sequential, Model
 
 def intialization():
     maxlen = 50 #sentences with length > maxlen will be ignored
@@ -51,6 +51,35 @@ def create_model(maxlen,hidden_dim,nb_classes):
     optimizers.Adam(lr=0.001, beta_1=0.6, beta_2=0.099, epsilon=1e-08, decay=0.005, clipnorm = 1., clipvalue = 0.5)
     model.compile(optimizer = 'Adam', loss = 'categorical_crossentropy',metrics=['categorical_accuracy'])
     return model
+
+def create_model_new(maxlen,hidden_dim,nb_classes):
+    
+    
+    model=Sequential()
+    model.add(Dropout(0.6, input_shape=(50, 384)))
+    #model.add(Embedding(len(vocabulary), embedding_vecor_length, input_length=max_review_length))
+    
+    '''LSTM Model'''
+    #model.add(LSTM(200,activation='relu'))
+    
+    '''Bidirectional LSTM Model'''
+    model.add(Bidirectional((LSTM(200,activation='relu'))))
+    
+    '''GRU Model'''
+    #model.add(GRU(200,activation='relu'))
+    
+    model.add(Dropout(0.015))
+    model.add(Dense(20))
+    # model.add(LSTM(200,activation='relu',return_sequences=True))
+    # model.add(Dropout(0.005))
+    # model.add(LSTM(100,activation='relu',return_sequences=True))
+    # model.add(LSTM(50))
+    
+    model.add(Dense(nb_classes, activation='softmax'))
+    #rmsprop=optimizers.rmsprop(lr=0.01)
+    model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+    return model
+
 
 def model_train(model,x_train,y_train,x_test,y_test,batch_size,num_epoch):
 
