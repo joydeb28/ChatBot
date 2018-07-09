@@ -3,4 +3,4 @@ ChatBot implementation,
 
 Intent identification with RNN,
 
-Intent identification with CNN\n
+Intent identification with CNN
