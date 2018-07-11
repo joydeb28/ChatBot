@@ -3,7 +3,7 @@ from keras.models import load_model
 import spacy
 from preprocessor import nlp
 import numpy as np
-from dependency_tree import to_nltk_tree , to_spacy_desc
+
 
 nb_classes = len(labels)
 
