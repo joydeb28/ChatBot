@@ -7,7 +7,7 @@ from keras.layers import Dense, Dropout, Input, merge
 from keras.layers.recurrent import LSTM
 from keras import optimizers
 from keras.layers import Embedding, Bidirectional,GRU
-from  keras.models  import Sequential, Model
+from keras.models  import Sequential, Model
 
 def intialization():
     maxlen = 50 #sentences with length > maxlen will be ignored
@@ -78,6 +78,7 @@ def create_model_new(maxlen,hidden_dim,nb_classes):
     model.add(Dense(nb_classes, activation='softmax'))
     #rmsprop=optimizers.rmsprop(lr=0.01)
     model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+    print("Model compilation complete.")
     return model
 
 
