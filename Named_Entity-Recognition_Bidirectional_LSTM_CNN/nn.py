@@ -6,7 +6,7 @@ from prepro import readfile,createBatches,createMatrices,iterate_minibatches,add
 from keras.utils import Progbar
 from keras.initializers import RandomUniform
 
-epochs = 1
+epochs = 10
 
 def tag_dataset(dataset):
    
@@ -30,11 +30,12 @@ def predict(sentence):
     #sen_list = [[['SOCCER', 'O\n'], ['-', 'O\n'], ['JAPAN', 'O\n'], ['GET', 'O\n'], ['LUCKY', 'O\n'], ['WIN', 'O\n'], [',', 'O\n'], ['CHINA', 'O\n'], ['IN', 'O\n'], ['SURPRISE', 'O\n'], ['DEFEAT', 'O\n'], ['.', 'O\n']]]
     test = addCharInformatioin(sen_list)
     
-    word2Idx,  label2Idx, case2Idx, char2Idx, wordEmbeddings = create_data()
+    word2Idx,  label2Idx, case2Idx, char2Idx, wordEmbeddings = create_index()
     
     predLabels = []
     
     test_set = padding(createMatrices(test, word2Idx, label2Idx, case2Idx,char2Idx))
+    
     test_batch,test_batch_len = createBatches(test_set)
     
     for i,data in enumerate(test_batch):    
@@ -47,9 +48,13 @@ def predict(sentence):
         pred = pred.argmax(axis=-1) #Predict the classes            
         predLabels.append(pred)
     entity_labels = []
+    j = 0
+    words_list = sentence.split()
     for i in predLabels[-1]:
-        entity_labels.append(idx2Label[int(i)])
-    print("predLabels",entity_labels[0])    
+        entity_labels.append((words_list[j],idx2Label[int(i)]))
+        j+=1
+    print("predLabels",entity_labels)    
+    
     return entity_labels
 
 def make_dataset(file_name):
@@ -62,7 +67,7 @@ trainSentences = make_dataset("data/train.txt")
 devSentences = make_dataset("data/valid.txt")
 testSentences = make_dataset("data/test.txt")
 
-def create_data():
+def create_index():
 
     labelSet = set()
     words = {}
@@ -113,7 +118,9 @@ def create_data():
     
     return word2Idx,  label2Idx, case2Idx,char2Idx,wordEmbeddings
 
-word2Idx,  label2Idx, case2Idx, char2Idx, wordEmbeddings = create_data()
+    
+    
+word2Idx,  label2Idx, case2Idx, char2Idx, wordEmbeddings = create_index()
 
 train_set = padding(createMatrices(trainSentences,word2Idx,  label2Idx, case2Idx,char2Idx))
 dev_set = padding(createMatrices(devSentences,word2Idx, label2Idx, case2Idx,char2Idx))
