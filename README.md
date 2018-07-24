@@ -10,5 +10,8 @@ Entity Extraction
 
 # Requirements
 Keras
+
 TensorFlow
+
 Python 2/3
+
