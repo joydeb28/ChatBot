@@ -6,9 +6,9 @@ from prepro import readfile,createBatches,createMatrices,iterate_minibatches,add
 from keras.utils import Progbar
 from keras.initializers import RandomUniform
 
-epochs = 10
+epochs = 150
 
-def tag_dataset(dataset):
+def tag_dataset(dataset,model):
    
     correctLabels = []
     predLabels = []
@@ -25,7 +25,7 @@ def tag_dataset(dataset):
         b.update(i)
     return predLabels, correctLabels
 
-def predict(sentence):
+def predict(sentence,model):
     sen_list = [[[i,'O\n'] for i in sentence.split()]]
     #sen_list = [[['SOCCER', 'O\n'], ['-', 'O\n'], ['JAPAN', 'O\n'], ['GET', 'O\n'], ['LUCKY', 'O\n'], ['WIN', 'O\n'], [',', 'O\n'], ['CHINA', 'O\n'], ['IN', 'O\n'], ['SURPRISE', 'O\n'], ['DEFEAT', 'O\n'], ['.', 'O\n']]]
     test = addCharInformatioin(sen_list)
@@ -155,8 +155,8 @@ def entity_model_BRNN():
 
 #model.summary()
 # plot_model(model, to_file='model.png')
-model = entity_model_BRNN()
-def train_model():
+entity_extract_model_BLSTM = entity_model_BRNN()
+def train_model(model):
     
     for epoch in range(epochs):    
         print("Epoch %d/%d"%(epoch,epochs))
@@ -168,22 +168,22 @@ def train_model():
         print(' ')
     return model
 
-model = train_model()
+entity_extract_model_BLSTM = train_model(entity_extract_model_BLSTM)
 
 def save_model(model,model_name):    
     model.save("Models/"+model_name+".h5")
     print("Model saved to Model folder.")
 
 #   Performance on dev dataset        
-predLabels, correctLabels = tag_dataset(dev_batch)        
+predLabels, correctLabels = tag_dataset(dev_batch,entity_extract_model_BLSTM)        
 pre_dev, rec_dev, f1_dev = compute_f1(predLabels, correctLabels, idx2Label)
 print("Dev-Data: Prec: %.3f, Rec: %.3f, F1: %.3f" % (pre_dev, rec_dev, f1_dev))
     
 #   Performance on test dataset       
-predLabels, correctLabels = tag_dataset(test_batch)        
+predLabels, correctLabels = tag_dataset(test_batch,entity_extract_model_BLSTM)        
 pre_test, rec_test, f1_test= compute_f1(predLabels, correctLabels, idx2Label)
 print("Test-Data: Prec: %.3f, Rec: %.3f, F1: %.3f" % (pre_test, rec_test, f1_test))
 
-save_model(model,"BRNN_Entity_Model")
+save_model(entity_extract_model_BLSTM,"BRNN_Entity_Model")
 sentence ="SOCCER - JAPAN GET LUCKY WIN CHINA IN SURPRISE DEFEAT."
-predict(sentence)
+predict(sentence,entity_extract_model_BLSTM)
