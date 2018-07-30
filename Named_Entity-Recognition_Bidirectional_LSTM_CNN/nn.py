@@ -6,7 +6,8 @@ from prepro import readfile,createBatches,createMatrices,iterate_minibatches,add
 from keras.utils import Progbar
 from keras.initializers import RandomUniform
 
-epochs = 150
+epochs = 300
+fEmbeddings = open("embeddings/glove.6B.100d.txt", encoding="utf-8")
 
 def tag_dataset(dataset,model):
    
@@ -29,8 +30,6 @@ def predict(sentence,model):
     sen_list = [[[i,'O\n'] for i in sentence.split()]]
     #sen_list = [[['SOCCER', 'O\n'], ['-', 'O\n'], ['JAPAN', 'O\n'], ['GET', 'O\n'], ['LUCKY', 'O\n'], ['WIN', 'O\n'], [',', 'O\n'], ['CHINA', 'O\n'], ['IN', 'O\n'], ['SURPRISE', 'O\n'], ['DEFEAT', 'O\n'], ['.', 'O\n']]]
     test = addCharInformatioin(sen_list)
-    
-    word2Idx,  label2Idx, case2Idx, char2Idx, wordEmbeddings = create_index()
     
     predLabels = []
     
@@ -63,9 +62,9 @@ def make_dataset(file_name):
     return Senetnecs
 
 
-trainSentences = make_dataset("data/train.txt")
-devSentences = make_dataset("data/valid.txt")
-testSentences = make_dataset("data/test.txt")
+trainSentences = make_dataset("flight_data/train.txt")
+devSentences = make_dataset("flight_data/valid.txt")
+testSentences = make_dataset("flight_data/test.txt")
 
 def create_index():
 
@@ -91,7 +90,6 @@ def create_index():
     word2Idx = {}
     wordEmbeddings = []
     
-    fEmbeddings = open("embeddings/glove.6B.100d.txt", encoding="utf-8")
     
     for line in fEmbeddings:
         split = line.strip().split(" ")
@@ -185,5 +183,5 @@ pre_test, rec_test, f1_test= compute_f1(predLabels, correctLabels, idx2Label)
 print("Test-Data: Prec: %.3f, Rec: %.3f, F1: %.3f" % (pre_test, rec_test, f1_test))
 
 save_model(entity_extract_model_BLSTM,"BRNN_Entity_Model")
-sentence ="SOCCER - JAPAN GET LUCKY WIN CHINA IN SURPRISE DEFEAT."
-predict(sentence,entity_extract_model_BLSTM)
+#sentence ="a flight from BLR to MAA on 2018/07/30"
+#predict(sentence,entity_extract_model_BLSTM)
