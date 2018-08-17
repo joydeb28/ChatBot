@@ -52,16 +52,6 @@ def predict(sentence,model):
     
     return entity_labels
 
-#sentence ="a flight from ccu to hyd on 2018/07/30"
-#list_sen = ["a flight from ccu to hyd on 2018/07/30","Make a booking from ccu to hyd on 2018/07/30","CCU","hyd"]
-test_File = open("Test_Data/Test_benchmark.txt")
-test_list = test_File.readlines()
-
-test_list = ['book a flight for Goa to haryana on 2016/11/30']
-pred_benchmark_list = []
-for i in test_list:
-    pred_benchmark_list.append(predict(i,entity_model))
-
 print("Enter/Paste your content. Press double enter to exit.")
 
 contents = []
@@ -74,11 +64,4 @@ while True:
     except EOFError:
         break
     contents.append(line)
-'''    
-def make_txt(list):
-    
-    f = open("Test_Data/benchmark_entity_result.txt",'w')  
-    f.write("\n".join(list))
-    
-make_txt(pred_benchmark_list)
-'''
+
