@@ -70,7 +70,7 @@ def response(user_response):
 
 
 flag=True
-print("joy: My name is joy. I will answer your queries about Chatbots. If you want to exit, type Bye!")
+print("JOY: My name is JOY. I will answer your queries about Chatbots. If you want to exit, type Bye!")
 
 while(flag==True):
     user_response = input()
@@ -78,18 +78,18 @@ while(flag==True):
     if(user_response!='bye'):
         if(user_response=='thanks' or user_response=='thank you' ):
             flag=False
-            print("joy: You are welcome..")
+            print("JOY: You are welcome..")
         else:
             if(greeting(user_response)!=None):
-                print("joy: "+greeting(user_response))
+                print("JOY: "+greeting(user_response))
             else:
                 sent_tokens.append(user_response)
                 word_tokens=word_tokens+nltk.word_tokenize(user_response)
                 final_words=list(set(word_tokens))
-                print("joy: ",end="")
+                print("JOY: ",end="")
                 print(response(user_response))
                 sent_tokens.remove(user_response)
     else:
         flag=False
-        print("joy: Bye! take care..")    
+        print("JOY: Bye! take care..")    
         
